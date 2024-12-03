@@ -119,6 +119,18 @@ export const readThreeProduct = query({
   }
 })
 
+export const readEightProduct = query({
+  handler: async (ctx) => {
+    try {
+      const products = await ctx.db.query("products").take(8);
+      return products;
+    } catch (error) {
+      console.error("Error in readEightProduct:", error);
+      throw error;
+    }
+  }
+})
+
 export const resetProducts = action({
   handler: async (ctx): Promise<{ success: boolean; error?: string }> => {
     try {

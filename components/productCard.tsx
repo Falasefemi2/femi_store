@@ -3,11 +3,14 @@
 import Image from "next/image"
 import { useQuery } from "convex/react"
 import { api } from "../convex/_generated/api"
+import ProductGridSkeleton from "./product-grid-skeleton"
+
 
 export default function ProductGrid() {
   const products = useQuery(api.products.readThreeProduct)
 
-  if (!products || products.length < 3) return null
+  if (!products) return <ProductGridSkeleton />
+  if (products.length < 3) return null
 
   const [firstProduct, ...restProducts] = products
 

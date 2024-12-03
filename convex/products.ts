@@ -107,6 +107,18 @@ export const readAllProducts = query({
   },
 });
 
+export const readThreeProduct = query({
+  handler: async (ctx) => {
+    try {
+      const products = await ctx.db.query("products").take(3);
+      return products;
+    } catch (error) {
+      console.error("Error in readThreeProduct:", error);
+      throw error;
+    }
+  }
+})
+
 export const resetProducts = action({
   handler: async (ctx): Promise<{ success: boolean; error?: string }> => {
     try {
@@ -149,3 +161,10 @@ export const deleteAllProducts = internalMutation({
     }
   }
 });
+
+
+
+
+
+
+

@@ -45,13 +45,13 @@ export function Header() {
                   href="/shirts"
                   className="text-sm font-medium transition-colors hover:text-primary"
                 >
-                  Women's Clothing
+                  Women Clothing
                 </Link>
                 <Link
                   href="/stickers"
                   className="text-sm font-medium transition-colors hover:text-primary"
                 >
-                  Men's Clothing
+                  Men Clothing
                 </Link>
               </nav>
             </SheetContent>

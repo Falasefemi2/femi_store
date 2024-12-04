@@ -3,52 +3,63 @@
 import Image from "next/image";
 import { useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
-import ProductGridSkeleton from "./product-grid-skeleton";
 import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay"
+import Autoplay from "embla-carousel-autoplay";
+import { useEffect, useRef } from "react";
+import ProductCarouselSkeleton from "./product-carousel-skeleton";
 
 export default function ProductCarousel() {
-    const products = useQuery(api.products.readEightProduct);
+  const products = useQuery(api.products.readEightProduct);
+  const plugin = useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true })
+  );
 
-    if (!products) return <ProductGridSkeleton />;
+  useEffect(() => {
+    // Reset autoplay on component mount
+    plugin.current.reset();
+  }, []);
 
-    return (
-        <div className="relative w-full max-w-lg mx-auto  mt-8">
-            <Carousel className="w-full max-w-lg"       plugins={[
-        Autoplay({
-          delay: 3000,
-        }),
-      ]}>
-                <CarouselContent className="flex gap-4">
-                    {products.map((product) => (
-                        <CarouselItem
-                            key={product.id}
-                            className="w-40 flex-shrink-0 flex-grow-0"
-                        >
-                            <div className="p-2 border rounded-lg shadow-sm bg-white">
-                                <Image
-                                    src={product.image || "/placeholder-image.jpg"}
-                                    alt={product.title || "Product Image"}
-                                    width={150}
-                                    height={150}
-                                    className="object-contain w-full h-40"
-                                />
-                                <h3 className="mt-2 text-sm font-medium text-center">
-                                    {product.title || "Untitled"}
-                                </h3>
-                            </div>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-            </Carousel>
-        </div>
-    );
+  if (!products) return <ProductCarouselSkeleton />;
+
+  return (
+    <div className="relative w-full max-w-5xl mx-auto mt-8 px-4">
+      <Carousel
+        className="w-full"
+        plugins={[plugin.current]}
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+      >
+        <CarouselContent className="-ml-2 md:-ml-4">
+          {products.map((product) => (
+            <CarouselItem key={product.id} className="pl-2 md:pl-4 md:basis-1/3 lg:basis-1/4">
+              <div className="p-2 border rounded-lg shadow-sm bg-white transition-all duration-300 hover:shadow-md">
+                <div className="aspect-square relative overflow-hidden rounded-md">
+                  <Image
+                    src={product.image || "/placeholder-image.jpg"}
+                    alt={product.title || "Product Image"}
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+                <h3 className="mt-2 text-sm font-medium text-center truncate">
+                  {product.title || "Untitled"}
+                </h3>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="hidden md:flex" />
+        <CarouselNext className="hidden md:flex" />
+      </Carousel>
+    </div>
+  );
 }
+
